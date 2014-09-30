@@ -59,11 +59,11 @@ public class BurpExtender implements IBurpExtender, IScannerCheck {
 		String fpkey = this.key.substring(0, keyhalf) + "$()" + this.key.substring(keyhalf, this.key.length());
 
 		// http://en.wikipedia.org/wiki/Shellshock_(software_bug)
-		String[] payloads = new String[]{
+		final String[] payloads = new String[]{
 				//CVE-2014-6271
 				"() { :;}; echo \"" + fpkey + "\"",  
 		};
-		String[] trailing = new String[]{"","&",";","&;",";&"};
+		final String[] trailing = new String[]{"","&",";","&;",";&"};
 		this.payloadBytes = new ArrayList<byte[]>() {
 			{
 				for(String p : payloads) {
@@ -109,7 +109,7 @@ public class BurpExtender implements IBurpExtender, IScannerCheck {
 			IHttpRequestResponse baseRequestResponse,
 			IScannerInsertionPoint insertionPoint) {
 		// TODO Auto-generated method stub
-		List<IScanIssue> issues = new ArrayList<>(this.payloadBytes.size());
+		List<IScanIssue> issues = new ArrayList<IScanIssue>(this.payloadBytes.size());
 		
 		byte[] test =  key.getBytes();
 		for(byte[] payload : payloadBytes) 
@@ -124,7 +124,7 @@ public class BurpExtender implements IBurpExtender, IScannerCheck {
 		        if (matches.size() > 0)
 		        {
 		            // get the offsets of the payload within the request, for in-UI highlighting
-		            List<int[]> requestHighlights = new ArrayList<>(1);
+		            List<int[]> requestHighlights = new ArrayList<int[]>(1);
 		            requestHighlights.add(insertionPoint.getPayloadOffsets(test));
 
 		            // report the issue
